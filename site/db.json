@@ -1,0 +1,18 @@
+{
+  "users": [
+    {
+      "id": "user_fe261cafbcbb73c6506",
+      "username": "admin",
+      "email": "slygust@gmail.com",
+      "password": "Tel8219X",
+      "role": "admin",
+      "plan": "premium_lifetime",
+      "createdAt": "2026-01-28T20:16:06.804Z",
+      "secretId": "Q6SPZohBV7cGd4l",
+      "secretLastUsedAt": null
+    }
+  ],
+  "apps": [],
+  "keys": [],
+  "resellers": []
+}

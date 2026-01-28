@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LunarAuth • Login</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+<body>
+  <div class="bg-glow"></div>
+
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="index.html">
+        <span class="brand-badge">L</span>
+        <span class="brand-name">LunarAuth</span>
+      </a>
+
+      <nav class="topbar-actions">
+        <a class="btn btn-ghost" href="index.html">Voltar</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container auth-shell">
+    <section class="auth-left">
+      <div class="auth-left-inner">
+        <div class="auth-kicker">🔒 Acesso <strong>Seguro</strong></div>
+        <h1>Entre para acessar seu painel</h1>
+        <p>
+          Gerencie seus AppIDs, keys e resellers em um único lugar. Cada AppID tem suas próprias keys e regras.
+        </p>
+        <p>
+          Dica: o usuário com email <strong>ruanrlqcv22@gmail.com</strong> vira <strong>Admin</strong> e começa no <strong>Premium Lifetime</strong>.
+        </p>
+      </div>
+    </section>
+
+    <section class="auth-right">
+      <div class="tabs" role="tablist" aria-label="Autenticação">
+        <button class="tab-btn active" type="button" data-tab="login">Sign In</button>
+        <button class="tab-btn" type="button" data-tab="register">Sign Up</button>
+      </div>
+
+      <form class="form active" id="loginForm">
+        <div class="field">
+          <div class="label">Usuário ou Email</div>
+          <input class="input" name="identifier" autocomplete="username" placeholder="Digite seu usuário ou email" required />
+        </div>
+        <div class="field">
+          <div class="label">Senha</div>
+          <input class="input" name="password" type="password" autocomplete="current-password" placeholder="Digite sua senha" required />
+        </div>
+        <button class="btn btn-primary" style="width:100%" type="submit">Entrar</button>
+        <div class="helper">Ao continuar, você concorda com os termos do painel.</div>
+      </form>
+
+      <form class="form" id="registerForm">
+        <div class="field">
+          <div class="label">Username</div>
+          <input class="input" name="username" autocomplete="username" placeholder="Escolha um username" required />
+        </div>
+        <div class="field">
+          <div class="label">Email (Gmail)</div>
+          <input class="input" name="email" type="email" autocomplete="email" placeholder="Digite seu gmail" required />
+        </div>
+        <div class="field">
+          <div class="label">Senha</div>
+          <input class="input" name="password" type="password" autocomplete="new-password" placeholder="Crie uma senha" required />
+        </div>
+        <button class="btn btn-primary" style="width:100%" type="submit">Criar Conta</button>
+        <div class="helper">Email e username não podem repetir.</div>
+      </form>
+    </section>
+  </main>
+
+  <div class="toast" id="toast"><div class="toast-inner"><div class="toast-dot"></div><div><div class="toast-title" id="toastTitle">Aviso</div><div class="toast-desc" id="toastDesc">...</div></div></div></div>
+
+  <script src="assets/js/app.js"></script>
+</body>
+</html>

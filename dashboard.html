@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LunarAuth • Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+<body>
+  <div class="bg-glow"></div>
+
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="index.html">
+        <span class="brand-badge">L</span>
+        <span class="brand-name">LunarAuth</span>
+      </a>
+
+      <nav class="topbar-actions">
+        <div id="topUser" style="display:flex;align-items:center;gap:10px;color:rgba(255,255,255,.9);font-weight:700;font-size:12px"></div>
+        <button class="btn btn-ghost" id="logoutBtn">Sair</button>
+      </nav>
+    </div>
+  </header>
+
+  <div class="panel">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-inner">
+        <div class="sidebar-user">
+          <div class="avatar" id="avatar">U</div>
+          <div class="user-meta">
+            <div class="user-name" id="sidebarUsername">carregando</div>
+            <div class="user-role" id="sidebarRole">User</div>
+          </div>
+        </div>
+
+        <nav class="nav" id="nav">
+          <a href="#" data-page="dashboard" class="active">Dashboard</a>
+          <a href="#" data-page="appids">AppIDs</a>
+          <a href="#" data-page="implement">Implementação</a>
+          <a href="#" data-page="resellers">Resellers</a>
+          <a href="#" data-page="profile">Perfil</a>
+        </nav>
+
+        <div class="sidebar-footer">
+          <button class="btn btn-danger" id="sidebarLogout">Sair</button>
+        </div>
+      </div>
+    </aside>
+
+    <main class="content">
+      <!-- Dashboard -->
+      <section class="page active" id="page-dashboard">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Dashboard</div>
+            <div class="page-sub">Gerencie seus AppIDs, keys e resellers de forma centralizada</div>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div class="card half">
+            <div class="kpi">
+              <div>
+                <div class="card-title">Criar AppID</div>
+                <div class="card-desc">Adicione um novo AppID (projeto) para separar suas keys</div>
+              </div>
+              <button class="btn btn-primary" id="openCreateAppBtn">+ Criar AppID</button>
+            </div>
+          </div>
+          <div class="card half">
+            <div class="kpi">
+              <div>
+                <div class="card-title">Seu Perfil</div>
+                <div class="card-desc">Plano, estatísticas e upgrade</div>
+              </div>
+              <button class="btn btn-ghost" id="goProfileBtn">Abrir</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="kpi" style="margin-bottom:10px">
+              <div>
+                <div class="card-title">Seus AppIDs</div>
+                <div class="card-desc" id="appsCountLabel">0 AppID ativo</div>
+              </div>
+              <button class="btn btn-ghost" id="goAppidsBtn">Ver todos</button>
+            </div>
+            <div class="grid" id="appsCards"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- AppIDs -->
+      <section class="page" id="page-appids">
+        <div class="page-header">
+          <div>
+            <div class="page-title">AppIDs</div>
+            <div class="page-sub">Clique em um AppID para gerenciar suas Keys e Resellers</div>
+          </div>
+          <button class="btn btn-primary" id="createAppBtn">+ Criar AppID</button>
+        </div>
+
+        <div class="grid">
+          <div class="card" id="appsTableCard">
+            <table class="table" id="appsTable">
+              <thead>
+                <tr>
+                  <th>APPID</th>
+                  <th>STATUS</th>
+                  <th>CRIADO EM</th>
+                  <th id="appsOwnerTh" style="display:none">DONO</th>
+                  <th>AÇÕES</th>
+                </tr>
+              </thead>
+              <tbody id="appsTbody"></tbody>
+            </table>
+          </div>
+
+          <div class="card" id="appDetailCard" style="display:none">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px">
+              <div>
+                <div class="card-title" id="selectedAppTitle">App</div>
+                <div class="card-desc" id="selectedAppDesc">Gerencie as keys deste AppID</div>
+              </div>
+              <div class="row-actions">
+                <button class="btn btn-ghost btn-small" id="toggleAppBtn">Pausar</button>
+                <button class="btn btn-primary btn-small" id="openCreateKeyBtn">+ Criar Key</button>
+                <button class="btn btn-danger btn-small" id="deleteAppBtn">Apagar AppID</button>
+              </div>
+            </div>
+
+            <div class="tabs2">
+              <button type="button" class="active" data-subtab="keys">Keys</button>
+              <button type="button" data-subtab="resellers">Resellers</button>
+            </div>
+
+            <div id="subtab-keys" style="margin-top:12px">
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;flex-wrap:wrap">
+                <div class="card-desc" id="keysHint">As keys só começam a contar tempo depois do primeiro uso. Pausas congelam o tempo.</div>
+                <div class="row-actions">
+                  <button class="btn btn-ghost btn-small" id="selectAllKeysBtn">Selecionar tudo</button>
+                  <button class="btn btn-ghost btn-small" id="bulkExtendKeysBtn">Adicionar tempo</button>
+                  <button class="btn btn-danger btn-small" id="bulkDeleteKeysBtn">Apagar selecionadas</button>
+                </div>
+              </div>
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width:42px"></th>
+                    <th>KEY</th>
+                    <th>NOME</th>
+                    <th>STATUS</th>
+                    <th>TEMPO</th>
+                    <th>HWID</th>
+                    <th>CRIADA POR</th>
+                    <th>AÇÕES</th>
+                  </tr>
+                </thead>
+                <tbody id="keysTbody"></tbody>
+              </table>
+            </div>
+
+            <div id="subtab-resellers" style="margin-top:12px;display:none">
+              <div class="card-desc" style="margin-bottom:10px">Resellers com acesso a este AppID</div>
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>USERNAME</th>
+                    <th>CRIADO EM</th>
+                    <th>AÇÕES</th>
+                  </tr>
+                </thead>
+                <tbody id="appResellersTbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Implementação -->
+      <section class="page" id="page-implement">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Implementação</div>
+            <div class="page-sub">Guia simples + demo de login por key usando o AppID correto</div>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div class="card half">
+            <div class="card-title">1) Use o AppID do seu projeto</div>
+            <div class="card-desc">Cada AppID representa um projeto. Keys criadas em um AppID não funcionam em outro.</div>
+            <div class="code-block" style="margin-top:12px">
+              <pre><code>APP_ID = "SEU_APPID_AQUI"</code></pre>
+            </div>
+          </div>
+
+          <div class="card half">
+            <div class="card-title">2) Campo de key + botão Login</div>
+            <div class="card-desc">No seu app, o usuário digita a key e clica em Login. Você valida AppID + Key + HWID. Se OK, libera.</div>
+            <div class="code-block" style="margin-top:12px">
+              <pre><code>Fluxo:
+1) Digitar a key
+2) Clicar em Login
+3) Validar (APP_ID, KEY, HWID)
+4) Se OK: liberar</code></pre>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">3) Demo (simulação do Login)</div>
+            <div class="card-desc">Isso simula o seu input + botão. Se a key for válida, passa.</div>
+
+            <div class="grid" style="margin-top:12px">
+              <div class="card third" style="background:transparent;border:0;padding:0">
+                <div class="field">
+                  <div class="label">AppID</div>
+                  <select class="input" id="implAppSelect"></select>
+                </div>
+              </div>
+              <div class="card third" style="background:transparent;border:0;padding:0">
+                <div class="field">
+                  <div class="label">Key</div>
+                  <input class="input" id="implKeyInput" placeholder="Lunar-Auth-..." />
+                </div>
+              </div>
+              <div class="card third" style="background:transparent;border:0;padding:0">
+                <div class="field">
+                  <div class="label">HWID (simulado)</div>
+                  <input class="input" id="implHwidInput" placeholder="PC-1" />
+                </div>
+              </div>
+            </div>
+
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:8px">
+              <button class="btn btn-primary" id="implLoginBtn">Login</button>
+              <div class="card-desc" id="implResult">Aguardando tentativa...</div>
+            </div>
+          </div>
+
+<div class="card">
+  <div class="card-title">4 Exemplo em C++ com Secret ID</div>
+  <div class="card-desc">Aqui está um exemplo de como implementar a autenticação em C++ com Secret ID:</div>
+  <div class="code-block" style="margin-top:12px">
+    <pre><code class="language-cpp">#include <iostream>
+#include <string>
+#include <windows.h>
+#include <winhttp.h>
+#include <sstream>
+#include <iomanip>
+#include <wincrypt.h>
+#include <vector>
+
+// Response codes
+enum class AuthResponse {
+    OK, APP_NOT_FOUND, APP_PAUSED, KEY_NOT_FOUND,
+    KEY_PAUSED, KEY_EXPIRED, HWID_REQUIRED, HWID_MISMATCH, INVALID_SECRET
+};
+
+// Get HWID (gerado a partir do volume serial + MAC address)
+std::string GetMachineHWID() {
+    // Obtém o volume serial
+    DWORD serial = 0;
+    GetVolumeInformation("C:\\", NULL, 0, &serial, NULL, NULL, NULL, 0);
+    
+    // Obtém o endereço MAC
+    std::string macAddress;
+    IP_ADAPTER_INFO adapterInfo[16];
+    DWORD dwBufLen = sizeof(adapterInfo);
+    
+    if (GetAdaptersInfo(adapterInfo, &dwBufLen) == ERROR_SUCCESS) {
+        PIP_ADAPTER_INFO pAdapterInfo = adapterInfo;
+        if (pAdapterInfo) {
+            std::ostringstream oss;
+            for (UINT i = 0; i < pAdapterInfo->AddressLength; i++) {
+                oss << std::hex << std::setw(2) << std::setfill('0') 
+                    << (int)pAdapterInfo->Address[i];
+            }
+            macAddress = oss.str();
+        }
+    }
+    
+    // Combina para criar um HWID único
+    std::ostringstream hwid;
+    hwid << std::hex << serial << "-" << macAddress;
+    
+    return hwid.str();
+}
+
+// Gera um hash SHA-256 (simplificado para exemplo)
+std::string GenerateSignature(const std::string& secretId, const std::string& appId, 
+                            const std::string& key, const std::string& hwid) {
+    // Em produção, use uma biblioteca de hash adequada
+    std::string data = secretId + appId + key + hwid;
+    // Simulação simplificada - use uma biblioteca de hash real
+    return "simulated_signature_" + data.substr(0, 10);
+}
+
+// Função para validar a chave
+AuthResponse ValidateKey(const std::string& secretId,
+                        const std::string& appId, 
+                        const std::string& key, 
+                        const std::string& hwid) {
+    HINTERNET hSession = WinHttpOpen(L"LunarAuth C++ Client", 
+                                   WINHTTP_ACCESS_TYPE_DEFAULT_PROXY,
+                                   WINHTTP_NO_PROXY_NAME, 
+                                   WINHTTP_NO_PROXY_BYPASS, 0);
+    
+    if (!hSession) return AuthResponse::KEY_NOT_FOUND;
+
+    // Gera a assinatura de autenticação
+    std::string signature = GenerateSignature(secretId, appId, key, hwid);
+
+    // Conecta ao servidor (substitua pelo seu domínio)
+    HINTERNET hConnect = WinHttpConnect(hSession, L"api.lunarauth.com", 
+                                      INTERNET_DEFAULT_HTTPS_PORT, 0);
+    if (!hConnect) {
+        WinHttpCloseHandle(hSession);
+        return AuthResponse::KEY_NOT_FOUND;
+    }
+
+    // Cabeçalhos da requisição
+    LPCWSTR headers = L"Content-Type: application/json\r\n"
+                     "X-Auth-Signature: " + signature.c_str() + L"\r\n"
+                     "X-Auth-Secret: " + secretId.c_str() + L"\r\n"
+                     "X-App-ID: " + appId.c_str() + L"\r\n";
+
+    // Corpo da requisição
+    std::wstring requestBody = L"{\"key\":\"" + 
+                              std::wstring(key.begin(), key.end()) + 
+                              L"\",\"hwid\":\"" + 
+                              std::wstring(hwid.begin(), hwid.end()) + 
+                              L"\"}";
+
+    // Envia a requisição POST
+    HINTERNET hRequest = WinHttpOpenRequest(hConnect, L"POST", 
+                                          L"/api/v1/validate",
+                                          NULL, WINHTTP_NO_REFERER, 
+                                          WINHTTP_DEFAULT_ACCEPT_TYPES, 
+                                          WINHTTP_FLAG_SECURE);
+
+    if (!hRequest) {
+        WinHttpCloseHandle(hConnect);
+        WinHttpCloseHandle(hSession);
+        return AuthResponse::KEY_NOT_FOUND;
+    }
+
+    // Envia os cabeçalhos
+    if (!WinHttpSendRequest(hRequest, headers, -1L, 
+                          (LPVOID)requestBody.c_str(), 
+                          requestBody.size() * sizeof(wchar_t),
+                          requestBody.size() * sizeof(wchar_t), 0)) {
+        WinHttpCloseHandle(hRequest);
+        WinHttpCloseHandle(hConnect);
+        WinHttpCloseHandle(hSession);
+        return AuthResponse::KEY_NOT_FOUND;
+    }
+
+    // Processa a resposta...
+    // (código de processamento da resposta permanece o mesmo)
+    // ...
+
+    WinHttpCloseHandle(hRequest);
+    WinHttpCloseHandle(hConnect);
+    WinHttpCloseHandle(hSession);
+    
+    // Processa o status code
+    if (statusCode == 200) return AuthResponse::OK;
+    if (statusCode == 400) return AuthResponse::KEY_NOT_FOUND;
+    if (statusCode == 401) return AuthResponse::INVALID_SECRET;
+    if (statusCode == 403) return AuthResponse::HWID_MISMATCH;
+    if (statusCode == 402) return AuthResponse::KEY_EXPIRED;
+    
+    return AuthResponse::KEY_NOT_FOUND;
+}
+
+int main() {
+    // Configurações da sua conta
+    const std::string SECRET_ID = "seu_secret_id_aqui"; // Substitua pelo seu Secret ID
+    const std::string DEFAULT_APP_ID = "seu_app_id_aqui"; // AppID padrão
+    
+    std::string appId = DEFAULT_APP_ID;
+    std::string key;
+    std::string hwid = GetMachineHWID();
+    
+    std::cout << "=== LunarAuth C++ Client ===\n";
+    std::cout << "HWID: " << hwid << "\n\n";
+    
+    std::cout << "Digite a chave: ";
+    std::getline(std::cin, key);
+
+    // Valida a chave
+    AuthResponse result = ValidateKey(SECRET_ID, appId, key, hwid);
+
+    // Processa o resultado
+    switch (result) {
+        case AuthResponse::OK:
+            std::cout << "\n✅ Autenticação bem-sucedida!\n";
+            // Código para quando a autenticação for bem-sucedida
+            break;
+            
+        case AuthResponse::INVALID_SECRET:
+            std::cout << "\n❌ Secret ID inválido.\n";
+            break;
+            
+        case AuthResponse::KEY_NOT_FOUND:
+            std::cout << "\n❌ Chave inválida ou não encontrada.\n";
+            break;
+            
+        case AuthResponse::HWID_MISMATCH:
+            std::cout << "\n❌ Esta chave já está em uso em outro dispositivo.\n";
+            break;
+            
+        case AuthResponse::KEY_EXPIRED:
+            std::cout << "\n❌ Esta chave expirou.\n";
+            break;
+            
+        default:
+            std::cout << "\n❌ Erro na autenticação.\n";
+    }
+
+    std::cout << "\nPressione Enter para sair...";
+    std::cin.get();
+    return 0;
+}</code></pre>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title">5) Como obter seu Secret ID</div>
+  <div class="card-desc">
+    <p>Seu Secret ID é único para sua conta e pode ser encontrado nas configurações do seu perfil.</p>
+    <p>Nunca compartilhe seu Secret ID ou o inclua em código público.</p>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title">6) Códigos de resposta</div>
+  <div class="card-desc">Use estes códigos para tratar erros no seu aplicativo:</div>
+  <div class="code-block" style="margin-top:12px">
+    <pre><code>OK
+INVALID_SECRET      // Secret ID inválido
+APP_NOT_FOUND       // AppID não encontrado
+APP_PAUSED          // Aplicativo pausado
+KEY_NOT_FOUND       // Chave não encontrada
+KEY_PAUSED          // Chave pausada
+KEY_EXPIRED         // Chave expirada
+HWID_REQUIRED       // HWID é obrigatório
+HWID_MISMATCH       // HWID não corresponde</code></pre>
+  </div>
+</div>  
+        </div>
+      </section>
+
+      <!-- Secret IDs -->
+      <section class="page" id="page-secrets">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Secret IDs</div>
+            <div class="page-sub">Gerencie seus Secret IDs para integração com aplicativos C++</div>
+          </div>
+          <button class="btn btn-primary" id="createSecretBtn">+ Criar Secret ID</button>
+        </div>
+
+        <div class="grid">
+          <div class="card">
+            <div class="card-desc" style="margin-bottom: 15px;">
+              <p>Secret IDs são utilizados para autenticar suas aplicações C++ com a API LunarAuth.</p>
+              <p>Cada Secret ID está vinculado à sua conta e permite acesso aos seus AppIDs.</p>
+              <p><strong>⚠️ IMPORTANTE:</strong> Nunca compartilhe seus Secret IDs publicamente.</p>
+            </div>
+            
+            <table class="table" id="secretsTable">
+              <thead>
+                <tr>
+                  <th>SECRET ID</th>
+                  <th>NOME</th>
+                  <th>CRIADO EM</th>
+                  <th>ÚLTIMO USO</th>
+                  <th>STATUS</th>
+                  <th>AÇÕES</th>
+                </tr>
+              </thead>
+              <tbody id="secretsTbody">
+                <tr>
+                  <td colspan="6" style="text-align: center; padding: 20px;">
+                    Nenhum Secret ID criado ainda
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Resellers -->
+      <section class="page" id="page-resellers">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Resellers</div>
+            <div class="page-sub">Controle quem pode criar keys em cada AppID</div>
+          </div>
+          <button class="btn btn-primary" id="openCreateResellerBtn">+ Criar Reseller</button>
+        </div>
+
+        <div class="grid">
+          <div class="card">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>USERNAME</th>
+                  <th>APPIDS</th>
+                  <th>CRIADO EM</th>
+                  <th>AÇÕES</th>
+                </tr>
+              </thead>
+              <tbody id="resellersTbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Profile -->
+      <section class="page" id="page-profile">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Perfil</div>
+            <div class="page-sub">Informações pessoais e plano</div>
+          </div>
+          <button class="btn btn-ghost" id="openPlansBtn">Upgrade</button>
+        </div>
+
+        <div class="grid">
+          <div class="card half">
+            <div class="card-title">Informações Pessoais</div>
+            <div style="margin-top:10px;display:grid;gap:8px">
+              <div style="display:flex;justify-content:space-between;gap:10px"><span style="color:var(--muted)">Username</span><strong id="profileUsername">-</strong></div>
+              <div style="display:flex;justify-content:space-between;gap:10px"><span style="color:var(--muted)">Email</span><strong id="profileEmail">-</strong></div>
+              <div style="display:flex;justify-content:space-between;gap:10px"><span style="color:var(--muted)">Tipo de Conta</span><strong id="profileRole">-</strong></div>
+              <div style="display:flex;justify-content:space-between;gap:10px"><span style="color:var(--muted)">Plano</span><strong id="profilePlan">-</strong></div>
+              <div style="display:flex;justify-content:space-between;gap:10px"><span style="color:var(--muted)">Conta criada em</span><strong id="profileCreatedAt">-</strong></div>
+              <div style="display:flex;justify-content:space-between;gap:10px;align-items:center">
+                <span style="color:var(--muted)">Secret ID</span>
+                <div style="display:flex;gap:8px;align-items:center">
+                  <code id="profileSecretId">-</code>
+                  <button class="btn btn-primary btn-small" id="copyProfileSecretBtn">Copiar</button>
+                </div>
+              </div>
+            </div>
+
+            <div id="premiumPrefixBox" style="margin-top:14px;display:none">
+              <div class="card-title" style="margin-bottom:8px">Prefixo de Key (Premium/Admin)</div>
+              <div class="card-desc" style="margin-bottom:10px">Sem espaços. Ex: Nevasca-</div>
+              <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+                <input class="input" id="premiumPrefixInput" placeholder="Nevasca-" style="max-width:280px" />
+                <button class="btn btn-primary btn-small" id="savePremiumPrefixBtn">Salvar</button>
+              </div>
+            </div>
+          </div>
+          <div class="card half">
+            <div class="card-title">Estatísticas</div>
+            <div style="margin-top:10px;display:grid;gap:10px">
+              <div class="kpi"><div class="kpi-label">AppIDs</div><div class="kpi-value" id="statApps">0</div></div>
+              <div class="kpi"><div class="kpi-label">Keys</div><div class="kpi-value" id="statKeys">0</div></div>
+              <div class="kpi"><div class="kpi-label">Resellers</div><div class="kpi-value" id="statResellers">0</div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Plans -->
+      <section class="page" id="page-plans">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Planos</div>
+            <div class="page-sub">Todos começam no Free. Premium mensal (checkout depois).</div>
+          </div>
+          <button class="btn btn-ghost" id="backToProfileBtn">Voltar ao Perfil</button>
+        </div>
+
+        <div class="grid">
+          <div class="card half" style="border-color:rgba(255,255,255,.12)">
+            <div class="card-title">Free <span style="color:var(--muted);font-weight:700">(Atual)</span></div>
+            <div class="card-desc" style="margin-top:8px">
+              <div style="display:grid;gap:8px;margin-top:8px">
+                <div>✔ 2 AppIDs</div>
+                <div>✔ 15 Keys por AppID</div>
+                <div>✔ Resellers por AppID (limitado)</div>
+              </div>
+            </div>
+          </div>
+          <div class="card half" style="border-color:rgba(255,255,255,.16)">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px">
+              <div>
+                <div class="card-title">Premium</div>
+                <div class="card-desc" style="margin-top:8px">
+                  <div style="font-size:28px;font-weight:800">R$ 18.90 <span style="font-size:12px;color:var(--muted)">/ mês</span></div>
+                  <div style="display:grid;gap:8px;margin-top:10px">
+                    <div>✔ Ilimitados AppIDs</div>
+                    <div>✔ Ilimitadas Keys por AppID</div>
+                    <div>✔ Ilimitados Users/Resellers por AppID</div>
+                  </div>
+                </div>
+              </div>
+              <span class="badge gray">⭐</span>
+            </div>
+            <div style="margin-top:14px">
+              <button class="btn btn-primary" style="width:100%" id="subscribePremiumBtn">Assinar Premium</button>
+              <div class="helper">Checkout será configurado depois.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Modals -->
+  <div class="modal" id="createAppModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title">Criar AppID</div>
+        <button class="modal-close" type="button" data-close="createAppModal">✕</button>
+      </div>
+      <div class="field">
+        <div class="label">Nome do AppID</div>
+        <input class="input" id="appNameInput" placeholder="ex: projeto1" />
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" type="button" data-close="createAppModal">Cancelar</button>
+        <button class="btn btn-primary" type="button" id="confirmCreateAppBtn">Criar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="createKeyModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title">Criar Key</div>
+        <button class="modal-close" type="button" data-close="createKeyModal">✕</button>
+      </div>
+      <div class="field">
+        <div class="label">Nome da key</div>
+        <input class="input" id="keyNameInput" placeholder="ex: key cliente x" />
+      </div>
+      <div class="field">
+        <div class="label">Tempo (ex: 1s, 1m, 1h, 1d)</div>
+        <input class="input" id="keyDurationInput" placeholder="ex: 1d" />
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" type="button" data-close="createKeyModal">Cancelar</button>
+        <button class="btn btn-primary" type="button" id="confirmCreateKeyBtn">Criar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="extendKeyModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title">Adicionar tempo</div>
+        <button class="modal-close" type="button" data-close="extendKeyModal">✕</button>
+      </div>
+      <div class="field">
+        <div class="label">Tempo para adicionar (ex: 1s, 1m, 1h, 1d)</div>
+        <input class="input" id="extendDurationInput" placeholder="ex: 1d" />
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" type="button" data-close="extendKeyModal">Cancelar</button>
+        <button class="btn btn-primary" type="button" id="confirmExtendKeyBtn">Adicionar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="createResellerModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title">Criar Reseller</div>
+        <button class="modal-close" type="button" data-close="createResellerModal">✕</button>
+      </div>
+      <div class="field">
+        <div class="label">Username</div>
+        <input class="input" id="resellerUsernameInput" placeholder="username do reseller" />
+      </div>
+      <div class="field">
+        <div class="label">AppIDs Permitidos</div>
+        <div id="resellerAppsList" style="display:grid;gap:8px"></div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" type="button" data-close="createResellerModal">Cancelar</button>
+        <button class="btn btn-primary" type="button" id="confirmCreateResellerBtn">Criar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Secret ID Modal -->
+  <div class="modal" id="createSecretModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title">Criar Secret ID</div>
+        <button class="modal-close" type="button" data-close="createSecretModal">✕</button>
+      </div>
+      <div class="field">
+        <div class="label">Nome do Secret ID</div>
+        <input class="input" id="secretNameInput" placeholder="ex: Meu App C++" />
+      </div>
+      <div class="field">
+        <div class="label">AppIDs Permitidos</div>
+        <div class="card-desc" style="margin-bottom: 8px;">Selecione quais AppIDs este Secret ID pode acessar:</div>
+        <div id="secretAppsList" style="display:grid;gap:8px"></div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" type="button" data-close="createSecretModal">Cancelar</button>
+        <button class="btn btn-primary" type="button" id="confirmCreateSecretBtn">Criar Secret ID</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- View Secret ID Modal -->
+  <div class="modal" id="viewSecretModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title">Secret ID Criado</div>
+        <button class="modal-close" type="button" data-close="viewSecretModal">✕</button>
+      </div>
+      <div class="field">
+        <div class="label">Seu Secret ID</div>
+        <div class="card-desc" style="margin-bottom: 8px; color: var(--danger);">
+          ⚠️ Copie e salve este Secret ID em um local seguro. Você não poderá vê-lo novamente!
+        </div>
+        <div class="code-block" style="background: var(--dark-2); padding: 12px; border-radius: 6px;">
+          <code id="generatedSecretId" style="font-family: monospace; font-size: 14px; word-break: break-all;"></code>
+        </div>
+      </div>
+      <div class="field">
+        <div class="label">AppIDs Permitidos</div>
+        <div id="viewSecretApps" style="display:grid;gap:4px;margin-top:8px"></div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-primary" type="button" id="copySecretBtn">Copiar Secret ID</button>
+        <button class="btn btn-ghost" type="button" data-close="viewSecretModal">Fechar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"><div class="toast-inner"><div class="toast-dot"></div><div><div class="toast-title" id="toastTitle">Aviso</div><div class="toast-desc" id="toastDesc">...</div></div></div></div>
+
+  <script src="assets/js/app.js"></script>
+</body>
+</html>
