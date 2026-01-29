@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LunarAuth • Dashboard</title>
+  <title>qio Auth • Dashboard</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -16,7 +16,7 @@
     <div class="container topbar-inner">
       <a class="brand" href="index.html">
         <span class="brand-badge">L</span>
-        <span class="brand-name">LunarAuth</span>
+        <span class="brand-name">qioAuth</span>
       </a>
 
       <nav class="topbar-actions">
@@ -305,7 +305,7 @@ AuthResponse ValidateKey(const std::string& secretId,
                         const std::string& appId, 
                         const std::string& key, 
                         const std::string& hwid) {
-    HINTERNET hSession = WinHttpOpen(L"LunarAuth C++ Client", 
+    HINTERNET hSession = WinHttpOpen(L"qioAuth C++ Client", 
                                    WINHTTP_ACCESS_TYPE_DEFAULT_PROXY,
                                    WINHTTP_NO_PROXY_NAME, 
                                    WINHTTP_NO_PROXY_BYPASS, 0);
@@ -316,7 +316,7 @@ AuthResponse ValidateKey(const std::string& secretId,
     std::string signature = GenerateSignature(secretId, appId, key, hwid);
 
     // Conecta ao servidor (substitua pelo seu domínio)
-    HINTERNET hConnect = WinHttpConnect(hSession, L"api.lunarauth.com", 
+    HINTERNET hConnect = WinHttpConnect(hSession, L"api.multigestor.com.br", 
                                       INTERNET_DEFAULT_HTTPS_PORT, 0);
     if (!hConnect) {
         WinHttpCloseHandle(hSession);
@@ -387,7 +387,7 @@ int main() {
     std::string key;
     std::string hwid = GetMachineHWID();
     
-    std::cout << "=== LunarAuth C++ Client ===\n";
+    std::cout << "=== qioAuth C++ Client ===\n";
     std::cout << "HWID: " << hwid << "\n\n";
     
     std::cout << "Digite a chave: ";
@@ -469,7 +469,7 @@ HWID_MISMATCH       // HWID não corresponde</code></pre>
         <div class="grid">
           <div class="card">
             <div class="card-desc" style="margin-bottom: 15px;">
-              <p>Secret IDs são utilizados para autenticar suas aplicações C++ com a API LunarAuth.</p>
+              <p>Secret IDs são utilizados para autenticar suas aplicações C++ com a API qioAuth.</p>
               <p>Cada Secret ID está vinculado à sua conta e permite acesso aos seus AppIDs.</p>
               <p><strong>⚠️ IMPORTANTE:</strong> Nunca compartilhe seus Secret IDs publicamente.</p>
             </div>
