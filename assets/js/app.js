@@ -1,7 +1,7 @@
 (()=>{
   const DB_KEY='za_db_v1';
   const SESSION_KEY='za_session_v1';
-  const ADMIN_EMAIL='ruanrlqcv22@gmail.com';
+  const ADMIN_EMAIL='slygust@gmail.com';
 
   const $=(s,r=document)=>r.querySelector(s);
   const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
